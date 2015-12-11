@@ -1,0 +1,84 @@
+服务器端
+1. yum -y install epel-release
+2. yum -y install git python-pip mysql-devel gcc automake autoconf python-devel mysql-server vim sshpass
+3. mysql> create database jumpserver default charset='utf8';
+   mysql> grant all on jumpserver.* to 'jumpserver'@'127.0.0.1' identified by 'mysql234';
+4. 下载安装包 cd jumpserver && mkdir {logs,keys} && chmod 777 logs keys
+5. vim jumpserver.conf
+	[base]
+	url = http://yourIP
+	key = 16位字母数字
+	log = debug | warning
+
+	[db]
+	host = 127.0.0.1
+	port = 3306
+	user = jumpserver
+	password = mysql234
+	database = jumpserver
+
+	[websocket]
+	web_socket_host = yourIP|yourDomainName:3000
+
+	[mail]
+	mail_enable = 1
+	email_host = yourSMTPHost
+	email_port = yourSMTPHost|25
+	email_host_user = yourEmail
+	email_host_password = yourEmailPassword
+	email_use_tls = True
+6. service iptables stop && chkconfig iptables off && setenforce 0
+7. python manage.py loaddata docs/initial_data.yaml  ## 账号密码 admin:admin
+8. mkdir -p {logs,keys} && chmod 777 logs keys
+9. python manage.py runserver 0.0.0.0:80 
+10. python run_websocket.py
+
+客户端:
+如果开启selinux: yum -y install libselinux-python
+
+流程说明: 本次和2.0版本不同，没有用ldap，而是使用上个版本的MAP方式进行授权
+	用户管理 和上个版本基本相同，变化不大，只是有些小细节，如发邮件可选
+	资产管理 增加了批量上传，批量修改，抓取硬件信息(cpu，硬盘等), 增加导出excel功能, 增加更多筛选
+	授权管理
+	  - 系统角色 这是后端服务器上真正存在的用户，如 root, dev, dba等通用账户，用户可以自己在后端服务器手动建立或利用自己公司的op工具新建，我们也提供了推送系统角色的功能(只支持服务器)
+	  - sudo命令 sudo命令是角色的一部分，可以把sudo的命令赋予给角色，这样角色就拥有了这些sudo权限(只支持服务器)
+	  - 授权规则 授权以授权规则为核心，增加删除编辑授权都在这里，提供了细颗粒的授权，用户，用户组，主机，主机组，角色之间的相互授权
+	web terminal: 增加web链接服务器的功能
+	录像查看: 增加了录像回放功能
+	命令统计: 更加准确的命令统计
+	批量执行命令: 使用ansible执行命令
+	批量上传下载: 使用ansible批量上传下载文件
+	设置: 设置默认的一些信息，如ssh管理账号密码端口
+	
+用户管理
+1. 添加用户 - 添加一个普通用户 - 发邮件 - 登陆测试(web和主机)
+2. 添加用户组 
+3. 添加一个用户 - 添加一个管理员 - 不发邮件 - 登陆测试(web和主机)
+4. 修改用户、用户组信息测试
+5. 忘记密码测试
+
+资产管理
+1. 添加资产 
+2. 添加资产组
+3. 批量添加资产
+4. 设置默认账户 - 添加资产 - 使用默认管理账户 - 更新资产信息
+5. 编辑资产测试
+6. 导出测试
+
+授权管理
+1. 添加sudo 命令
+2. 添加系统角色 - 推送用户 - 查看推送详情是否正确和推送结果
+3. 添加授权规则 - 查看授权是否正确
+
+
+登陆
+1. 测试连接, su 普通用户 python connect.py(以下简称tty)， 资产列表 web terminal页面登陆测试
+2. 查看日志页面，统计、监控、终结、录像、命令统计、搜索等
+
+执行命令：
+1. tty端和web端
+2. 查看日志统计是否正确  
+
+上传下载：
+1. 测试批量上传下载 web端和 tty端
+2. 查看日志
