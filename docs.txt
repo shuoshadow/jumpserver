@@ -49,6 +49,7 @@
 	批量执行命令: 使用ansible执行命令
 	批量上传下载: 使用ansible批量上传下载文件
 	设置: 设置默认的一些信息，如ssh管理账号密码端口
+	websocket: 使用 tornado写的websocket，负责web terminal, web 命令执行
 	
 用户管理
 1. 添加用户 - 添加一个普通用户 - 发邮件 - 登陆测试(web和主机)
