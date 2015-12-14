@@ -3,7 +3,7 @@
 2. yum -y install git python-pip mysql-devel gcc automake autoconf python-devel mysql-server vim sshpass
 3. mysql> create database jumpserver default charset='utf8';
    mysql> grant all on jumpserver.* to 'jumpserver'@'127.0.0.1' identified by 'mysql234';
-4. 下载安装包  git clone https://git@github.com:ibuler/jumpserver.git && cd jumpserver && mkdir -p {logs,keys} && chmod 777 logs keys
+4. 下载安装包   git clone https://github.com/ibuler/jumpserver.git && cd jumpserver && mkdir -p {logs,keys} && chmod 777 logs keys
 5. vim jumpserver.conf
 	[base]
 	url = http://yourIP
