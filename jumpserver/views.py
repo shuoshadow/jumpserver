@@ -344,7 +344,7 @@ def download(request):
 def exec_cmd(request):
     role = request.GET.get('role')
     check_assets = request.GET.get('check_assets', '')
-    web_terminal_uri = 'ws://%s/exec?role=%s' % (WEB_SOCKET_HOST, role)
+    web_terminal_uri = '%s/exec?role=%s' % (WEB_SOCKET_HOST, role)
     return my_render('exec_cmd.html', locals(), request)
 
 
@@ -352,7 +352,11 @@ def exec_cmd(request):
 def web_terminal(request):
     asset_id = request.GET.get('id')
     role_name = request.GET.get('role')
-    web_terminal_uri = 'ws://%s/terminal?id=%s&role=%s' % (WEB_SOCKET_HOST, asset_id, role_name)
+    asset = get_object(Asset, id=asset_id)
+    if asset:
+        print asset
+        hostname = asset.hostname
+    web_terminal_uri = '%s/terminal?id=%s&role=%s' % (WEB_SOCKET_HOST, asset_id, role_name)
     return render_to_response('jlog/web_terminal.html', locals())
 
 

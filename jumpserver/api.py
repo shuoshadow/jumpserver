@@ -73,9 +73,9 @@ def get_asset_info(asset):
             if os.path.isfile(default.field4):
                 info['ssh_key'] = default.field4
     else:
-        info['port'] = int(asset.port)
         info['username'] = asset.username
         info['password'] = CRYPTOR.decrypt(asset.password)
+        info['port'] = int(asset.port)
 
     return info
 
